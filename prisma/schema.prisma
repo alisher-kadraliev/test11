@@ -1,0 +1,182 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider          = "postgresql"
+  url               = env("DATABASE_URL")
+  directUrl         = env("DIRECT_URL")
+}
+
+enum RoleName {
+  FREELANCER
+  CLIENT
+}
+
+enum CategoryName {
+  GRAPHICDESIGN
+  VIDEOEDITING
+  WRITING
+  TRANSLATING
+}
+
+model User {
+  id           String      @id @default(uuid())
+  email        String      @unique
+  firstName    String
+  lastName     String
+  profileImage String?
+  roleName     RoleName?
+  freelancer   Freelancer?
+  client       Client?
+
+  createdAt    DateTime    @default(now())
+  updatedAt    DateTime    @updatedAt
+}
+
+model Freelancer {
+  id             String         @id @default(uuid())
+  user           User           @relation(fields: [userId], references: [id])
+  userId         String         @unique
+  firstName      String?
+  lastName       String?
+  province       String?
+  address        String?
+  postalCode     String?
+  paymentMethod  String?
+  bankName       String?
+  idNumber       String?
+  accountNumber  String?
+  paypalUsername String?
+  description    String?
+  profilePic     String?
+  totalEarnings  Float          @default(0.0)
+  skills         String[]
+  workHistory    WorkHistory[]
+
+  createdAt      DateTime       @default(now())
+  updatedAt      DateTime       @updatedAt
+
+  Skill Skill[]
+
+  Proposal Proposal[]
+
+  CompletedJob CompletedJob[]
+
+  Hired Hired[]
+}
+
+model Client {
+  id             String      @id @default(uuid())
+  user           User        @relation(fields: [userId], references: [id])
+  userId         String      @unique
+  firstName      String?
+  lastName       String?
+  province       String?
+  address        String?
+  postalCode     String?
+  paymentMethod  String?
+  bankName       String?
+  idNumber       String?
+  accountNumber  String?
+  paypalUsername String?
+  description    String?
+  profilePic     String?
+
+  createdAt      DateTime    @default(now())
+  updatedAt      DateTime    @updatedAt
+
+
+  JobPost JobPost[]
+
+  CompletedJob CompletedJob[]
+
+  Hired Hired[]
+}
+
+model WorkHistory {
+  id           String      @id @default(uuid())
+  freelancer   Freelancer  @relation(fields: [freelancerId], references: [id])
+  freelancerId String
+  jobTitle     String
+  description  String
+  startDate    DateTime
+  endDate      DateTime?
+
+  createdAt    DateTime    @default(now())
+  updatedAt    DateTime    @updatedAt
+}
+
+model Skill {
+  id           String      @id @default(cuid())
+  freelancerId String
+  name         String
+  freelancer   Freelancer  @relation(fields: [freelancerId], references: [id])
+}
+
+model JobPost {
+  id              String   @id @default(uuid())
+  title           String  
+  shortDescription String
+  fullDescription String  
+  price           Float
+  clientId        String
+  client          Client   @relation(fields: [clientId], references: [id])
+  fileUrls        String[] 
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+  categoryName    CategoryName?
+
+  Proposal Proposal[]
+
+  CompletedJob CompletedJob[]
+
+  Hired Hired[]
+}
+
+model Proposal {
+  id             String      @id @default(uuid())
+  jobId          String
+  job            JobPost     @relation(fields: [jobId], references: [id])
+  freelancerId   String
+  freelancer     Freelancer @relation(fields: [freelancerId], references: [id])
+  proposal       String
+  fileUrls       String[]   // URLs of uploaded files
+  createdAt      DateTime   @default(now())
+  updatedAt      DateTime   @updatedAt
+}
+
+model CompletedJob {
+  id             String      @id @default(uuid())
+  job            JobPost     @relation(fields: [jobId], references: [id])
+  jobId          String
+  freelancer     Freelancer @relation(fields: [freelancerId], references: [id])
+  freelancerId   String
+  client         Client      @relation(fields: [clientId], references: [id])
+  clientId       String
+  jobTitle       String
+  description    String
+  completedDate  DateTime    @default(now())
+
+  createdAt      DateTime    @default(now())
+  updatedAt      DateTime    @updatedAt
+}
+
+model Hired {
+  id               String      @id @default(uuid())
+  jobId            String
+  job              JobPost     @relation(fields: [jobId], references: [id])
+  clientId         String
+  client           Client      @relation(fields: [clientId], references: [id])
+  freelancerId     String
+  freelancer       Freelancer @relation(fields: [freelancerId], references: [id])
+  jobTitle         String
+  clientFirstName  String
+  clientLastName   String
+  freelancerFirstName String
+  freelancerLastName  String
+  createdAt        DateTime    @default(now())
+  updatedAt        DateTime    @updatedAt
+
+  
+}
