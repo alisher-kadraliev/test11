@@ -25,7 +25,7 @@ const EditProfilePage: React.FC = () => {
     setLoading(true);
     setError(null);
     try {
-      const response = await fetch('http://localhost:3000/api/freelancerprofileedit', {
+      const response = await fetch('https://test11-virid.vercel.app/api/freelancerprofileedit', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

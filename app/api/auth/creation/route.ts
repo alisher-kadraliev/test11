@@ -29,10 +29,10 @@ export async function GET() {
         profileImage: user.picture ?? `https://avatar.vercel.sh/${user.given_name}`,
       },
     });
-    return NextResponse.redirect("http://localhost:3000/pages/RegEntPage");
+    return NextResponse.redirect("https://test11-virid.vercel.app/pages/RegEntPage");
   }
 
-  return NextResponse.redirect("http://localhost:3000");
+  return NextResponse.redirect("https://test11-virid.vercel.app");
 }
 
 // app/api/auth/creation/route.ts
