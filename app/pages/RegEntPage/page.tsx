@@ -19,12 +19,10 @@ const Page: React.FC = () => {
         },
         body: JSON.stringify({ roleName: role }),
       });
-          
+
       if (response.ok) {
-        const redirectUrl = role === 'FREELANCER'
-          ? `${window.location.origin}/pages/dashboard/freelancer`
-          : `${window.location.origin}/pages/dashboard/client`;
-        router.push(redirectUrl);
+        const data = await response.json();
+        router.push(data.redirectUrl);
       } else {
         const errorData = await response.json();
         setError(errorData.error || 'Failed to select role');

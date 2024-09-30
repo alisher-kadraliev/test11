@@ -1,5 +1,3 @@
-// pages/api/roleselection.ts
-
 import prisma from "@/app/lib/db";
 import { getKindeServerSession } from "@kinde-oss/kinde-auth-nextjs/server";
 import { NextResponse } from "next/server";
@@ -57,7 +55,7 @@ export async function POST(request: Request) {
       ? `${new URL(request.url).origin}/pages/dashboard/freelancer`
       : `${new URL(request.url).origin}/pages/dashboard/client`;
 
-    return NextResponse.redirect(redirectUrl);
+    return NextResponse.json({ redirectUrl });
   } catch (error) {
     if (error instanceof Error) {
       console.error("Error in role selection POST route:", error.message);
